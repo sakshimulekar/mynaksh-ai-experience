@@ -52,8 +52,8 @@ interface ConversationState {
 }
 
 export const useConversationStore = create<ConversationState>((set, get) => ({
-  messages: [],
-  isLoading: true,
+  messages: INITIAL_MOCK_CONVERSATION,
+  isLoading: false,
   isAiTyping: false,
   error: null,
   activeReply: null,

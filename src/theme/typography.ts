@@ -7,24 +7,24 @@ import { Platform } from 'react-native';
 export const typography = {
   fontFamily: {
     regular: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      ios: undefined,
+      android: 'sans-serif',
+      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }),
     medium: Platform.select({
-      ios: 'System',
-      android: 'Roboto-Medium',
-      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      ios: undefined,
+      android: 'sans-serif-medium',
+      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }),
     semibold: Platform.select({
-      ios: 'System',
-      android: 'Roboto-Medium',
-      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      ios: undefined,
+      android: 'sans-serif-medium',
+      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }),
     bold: Platform.select({
-      ios: 'System',
-      android: 'Roboto-Bold',
-      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      ios: undefined,
+      android: 'sans-serif',
+      default: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }),
   },
   size: {

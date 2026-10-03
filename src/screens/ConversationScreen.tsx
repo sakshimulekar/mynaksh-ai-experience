@@ -14,11 +14,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useConversationStore } from '../state/useConversationStore';
 import { ConversationMessage, FeedbackReasonChip } from '../types/conversation';
 import { RecommendationItem } from '../types/recommendation';
@@ -61,10 +61,12 @@ export const ConversationScreen: React.FC = () => {
   const [showDevControls, setShowDevControls] = useState(false);
   const [selectedActionMessage, setSelectedActionMessage] = useState<ConversationMessage | null>(null);
 
-  // Load initial conversation on mount
+  // Load initial conversation if not already present
   useEffect(() => {
-    loadInitialConversation();
-  }, []);
+    if (messages.length === 0) {
+      loadInitialConversation();
+    }
+  }, [messages.length, loadInitialConversation]);
 
   const handleLongPress = useCallback((message: ConversationMessage) => {
     setSelectedActionMessage(message);
@@ -99,7 +101,7 @@ export const ConversationScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
 
       {/* Header Bar */}
@@ -127,8 +129,8 @@ export const ConversationScreen: React.FC = () => {
 
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
       >
         {/* Main Content Area */}
         <View style={styles.contentArea}>
@@ -184,17 +186,14 @@ export const ConversationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    height: '100%',
     backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    height: '100%',
     backgroundColor: colors.background,
   },
   contentArea: {
     flex: 1,
-    height: '100%',
   },
   errorContainer: {
     flex: 1,

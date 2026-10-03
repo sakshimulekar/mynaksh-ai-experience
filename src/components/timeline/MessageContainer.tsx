@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { ConversationMessage, FeedbackReasonChip } from '../../types/conversation';
 import { RecommendationItem } from '../../types/recommendation';
 import { DateSeparator } from './DateSeparator';
@@ -104,9 +104,15 @@ export const MessageContainer: React.FC<MessageContainerProps> = React.memo(({
   };
 
   return (
-    <Animated.View entering={FadeInDown.duration(260)}>
+    <View style={styles.messageRow}>
       {showDateSeparator ? <DateSeparator timestamp={message.createdAt} /> : null}
       {renderMessageContent()}
-    </Animated.View>
+    </View>
   );
+});
+
+const styles = StyleSheet.create({
+  messageRow: {
+    width: '100%',
+  },
 });
