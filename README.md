@@ -118,9 +118,18 @@ mynaksh-ai-experience/
 
 ---
 
-## 🧩 Architectural Deep Dive
+## 🏗️ Component Architecture
 
-### 1. Recommendation Rendering Strategy (The Core Requirement)
+The application is structured into clearly bounded layers following clean separation of concerns:
+- **Presentation / Screens Layer (`src/screens`)**: Orchestrates the header, timeline viewport, composer, and interaction overlays with `KeyboardAvoidingView` resize behavior.
+- **Timeline & Message Layer (`src/components/timeline`)**: Uses a polymorphic dispatcher pattern in `MessageContainer.tsx` to conditionally delegate rendering to specialized sub-views (`UserMessage`, `AIMessage`, `HumanMessage`, `SystemMessage`) based on discriminated message type unions.
+- **Experience Cards Layer (`src/components/recommendations`)**: Encapsulates all Vedic card presentations into standalone, self-contained components registered into a central factory registry.
+- **State & Service Layer (`src/state`, `src/services`)**: Completely decoupled from UI rendering, ensuring 100% testability with zero mock DOM dependencies.
+
+---
+
+## 🧩 Recommendation Rendering Strategy
+
 To ensure **zero architectural changes** when backend AI evolves and introduces new experience types, we implemented a **Registry & Strategy Pattern**:
 
 - **Decoupled Architecture**: Message rendering components (`AIMessage.tsx`, `RecommendationCarousel.tsx`) have **zero hardcoded dependencies** on individual card types.
@@ -142,8 +151,11 @@ RecommendationRegistry.register({
 });
 ```
 
-### 2. State Management Approach (Zustand + Unidirectional Flow)
-We chose **Zustand** for its minimal boilerplate, fast selector-based re-rendering, and predictable state transitions:
+---
+
+## 🔄 State Management Approach
+
+We chose **Zustand** for its minimal boilerplate, fast selector-based re-rendering, and predictable unidirectional state transitions:
 
 1. **Optimistic Updates**: When a user submits a message, it is instantly appended to the local state with status `'sending'`, an assigned UUID, and a timestamp.
 2. **Lifecycle Transitions**:
@@ -154,33 +166,29 @@ We chose **Zustand** for its minimal boilerplate, fast selector-based re-renderi
    - `Reply`: Captures sender info and text snippet into `activeReply`, which renders above the composer.
    - `Delete`: Removes the message by ID while preserving timeline scroll stability.
 
-### 3. Message Grouping & Virtualization
-- **Grouping Logic (`MessageContainer.tsx`)**: Messages from the same sender within 5 minutes are grouped: top/bottom corner radii are smoothed, and sender headers are deduplicated.
-- **Date Separators**: Automatically injected between messages belonging to different calendar days ("Today", "Yesterday", or formatted dates).
-- **Virtualization (`FlatList`)**: Configured with `initialNumToRender={12}`, `maxToRenderPerBatch={10}`, `windowSize={11}`, and memoized render items (`React.memo`) to ensure silky 60fps scrolling even with extensive recommendation carousels.
+---
+
+## ⚡ Performance Considerations
+
+1. **Virtualized List Rendering**:
+   - `ConversationTimeline.tsx` utilizes `FlatList` with fine-tuned window parameters (`initialNumToRender={12}`, `maxToRenderPerBatch={10}`, `windowSize={11}`) and `removeClippedSubviews={true}`.
+2. **Component Memoization**:
+   - Every message row (`MessageContainer.tsx`) and recommendation card is wrapped in `React.memo` with custom equality checks, preventing re-renders of the entire chat history when the composer updates.
+3. **Hardware-Accelerated Micro-Animations**:
+   - Shimmer loaders, typing pulse dots, and feedback chip containers use `useNativeDriver: true` to execute on the UI thread without bridging bottlenecks.
+4. **Shallow State Subscriptions**:
+   - State selectors in components subscribe only to relevant slices (e.g. `isAiTyping` or `activeReply`), preventing global re-render cascades.
 
 ---
 
-## 🛠️ Testing & Interviewer Evaluation Toolbox
+## ⚖️ Trade-offs Made Due to Time Constraints
 
-A built-in **Dev Toolbox** (toggleable via the ⚙️ icon in the header) allows instant evaluation of edge cases:
-
-1. **Fail Next Msg (Retry Demo)**: Simulates network drop on send. Tapping the red "⚠️ Failed • Retry" pill on the user bubble triggers an optimistic resend!
-2. **Human Astrologer Mode**: Toggles live handover to verified astrologer *Acharya Raghav Sharma*.
-3. **Force Load Error**: Simulates initial network timeout to showcase the error recovery banner with retry.
-4. **Reset Mock State**: Resets the chat to the exact 4-message initial payload from the assignment.
-5. **Clear Chat**: Clears timeline to evaluate the empty state and quick consultation inquiry chips.
-
----
-
-## ⚖️ Trade-offs & Future Considerations
-
-| Decision | Rationale | Production Recommendation |
+| Area | Implemented Approach | Rationale & Production Recommendation |
 | :--- | :--- | :--- |
-| **Simulated In-Memory AI Engine** | Self-contained, zero-dependency testing for assessment. | Integrate with WebSocket / SSE streaming endpoint (e.g. OpenAI / Gemini SDK). |
-| **Zustand In-Memory Store** | Fast, reactive, zero boilerplate. | Add `zustand/middleware/persist` with MMKV for persistent offline chat history. |
-| **React Native Animated API** | Universal cross-platform compatibility across Web, iOS, and Android. | Use `react-native-reanimated` Worklets with gesture-handler for drag-to-dismiss sheet. |
-| **Horizontal FlatList in Carousel** | Standard React Native native scrolling. | Add pagination dots indicator for carousel index tracking. |
+| **AI Backend Communication** | Simulated in-memory asynchronous engine (`aiSimulationService.ts`). | Self-contained, zero-dependency offline testing for assessment. In production, connect to WebSocket / Server-Sent Events (SSE) streaming API. |
+| **Offline Persistence** | In-memory Zustand store. | Minimizes setup overhead for evaluation. In production, integrate `zustand/middleware/persist` with MMKV for fast disk storage. |
+| **Video Recording Delivery** | Recorded screen captures & instructions for capturing device demo. | Allows reviewers to run locally on web, iOS simulator, or Android device directly. |
+| **Carousel Indicator** | Horizontal swipeable native `ScrollView` with momentum decay. | Cleanest cross-platform performance without third-party carousel bloat. |
 
 ---
 
