@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { FeedbackReasonChip } from '../../types/conversation';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
@@ -29,7 +30,7 @@ export const FeedbackChips: React.FC<FeedbackChipsProps> = ({
   onToggleChip,
 }) => {
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeInUp.duration(220)} style={styles.container}>
       <Text style={styles.headerTitle}>What could be improved with this celestial response?</Text>
       <View style={styles.chipsRow}>
         {AVAILABLE_CHIPS.map(chip => {
@@ -56,7 +57,7 @@ export const FeedbackChips: React.FC<FeedbackChipsProps> = ({
           );
         })}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

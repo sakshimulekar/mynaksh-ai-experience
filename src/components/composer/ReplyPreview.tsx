@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { ReplyContext } from '../../types/conversation';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
@@ -22,7 +23,11 @@ export const ReplyPreview: React.FC<ReplyPreviewProps> = ({ reply, onDismiss }) 
   const senderLabel = reply.senderName || (reply.senderType === 'ai' ? 'AI Astrologer' : 'Astrologer');
 
   return (
-    <View style={styles.container}>
+    <Animated.View
+      entering={FadeInDown.duration(200)}
+      exiting={FadeOutDown.duration(150)}
+      style={styles.container}
+    >
       <View style={styles.leftBar} />
       <View style={styles.content}>
         <View style={styles.titleRow}>
@@ -40,7 +45,7 @@ export const ReplyPreview: React.FC<ReplyPreviewProps> = ({ reply, onDismiss }) 
       >
         <Text style={styles.closeText}>✕</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 

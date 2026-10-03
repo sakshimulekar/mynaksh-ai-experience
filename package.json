@@ -1,12 +1,14 @@
 {
   "name": "mynaksh-ai-experience",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "web": "expo start --web",
+    "start:expo": "expo start",
+    "test": "node scripts/verify-architecture.js"
   },
   "dependencies": {
     "@react-navigation/native": "^7.0.14",
@@ -34,6 +36,7 @@
     "@babel/preset-react": "^7.29.7",
     "@babel/preset-typescript": "^7.29.7",
     "@babel/register": "^7.29.7",
+    "@types/jest": "^30.0.0",
     "@types/react": "~18.3.12",
     "babel-preset-expo": "^57.0.13",
     "typescript": "^5.3.3"

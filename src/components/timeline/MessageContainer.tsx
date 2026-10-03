@@ -14,6 +14,7 @@ import { UserMessage } from './UserMessage';
 import { AIMessage } from './AIMessage';
 import { HumanMessage } from './HumanMessage';
 import { SystemMessage } from './SystemMessage';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 interface MessageContainerProps {
   message: ConversationMessage;
@@ -103,9 +104,9 @@ export const MessageContainer: React.FC<MessageContainerProps> = React.memo(({
   };
 
   return (
-    <View>
+    <Animated.View entering={FadeInDown.duration(260)}>
       {showDateSeparator ? <DateSeparator timestamp={message.createdAt} /> : null}
       {renderMessageContent()}
-    </View>
+    </Animated.View>
   );
 });
