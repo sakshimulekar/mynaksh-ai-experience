@@ -63,6 +63,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.quickPromptsScroll}
+        nestedScrollEnabled={true}
+        directionalLockEnabled={true}
       >
         {QUICK_PROMPTS.map(p => (
           <TouchableOpacity

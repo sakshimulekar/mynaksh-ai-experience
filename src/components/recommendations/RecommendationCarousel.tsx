@@ -50,6 +50,9 @@ export const RecommendationCarousel: React.FC<RecommendationCarouselProps> = ({
         decelerationRate="fast"
         snapToInterval={242} // card width + margin
         snapToAlignment="start"
+        nestedScrollEnabled={true}
+        directionalLockEnabled={true}
+        scrollEventThrottle={16}
       >
         {recommendations.map((item, index) =>
           RecommendationRegistry.renderCard(

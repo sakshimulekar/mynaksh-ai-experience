@@ -86,12 +86,16 @@ export const ConversationTimeline: React.FC<ConversationTimelineProps> = ({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         initialNumToRender={12}
         maxToRenderPerBatch={10}
         windowSize={11}
+        scrollEnabled={true}
+        nestedScrollEnabled={true}
+        bounces={true}
+        alwaysBounceVertical={true}
         removeClippedSubviews={Platform.OS !== 'web'}
         ListFooterComponent={isAiTyping ? <TypingIndicator /> : null}
       />
@@ -102,9 +106,11 @@ export const ConversationTimeline: React.FC<ConversationTimelineProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
   },
   listContent: {
+    flexGrow: 1,
     paddingVertical: spacing.md,
-    paddingBottom: spacing.xxl,
+    paddingBottom: spacing.xxxl,
   },
 });

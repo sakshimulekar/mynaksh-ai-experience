@@ -184,14 +184,17 @@ export const ConversationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    height: '100%',
     backgroundColor: colors.background,
   },
   container: {
     flex: 1,
+    height: '100%',
     backgroundColor: colors.background,
   },
   contentArea: {
     flex: 1,
+    height: '100%',
   },
   errorContainer: {
     flex: 1,
